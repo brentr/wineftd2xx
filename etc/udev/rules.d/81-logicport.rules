@@ -1,0 +1,2 @@
+#Intronix Logicport logic analyzer
+SUBSYSTEM=="usb", ATTR{idVendor}=="0403", ATTRS{idProduct}=="dc48", MODE="0664", GROUP="plugdev"
