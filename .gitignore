@@ -4,3 +4,5 @@ libftd2xx*
 .keepme
 *.so
 *.def
+README
+wineftd2xx*
