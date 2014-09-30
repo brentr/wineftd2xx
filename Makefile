@@ -1,8 +1,10 @@
 #Makefile for wineftd2xx<->ftd2xx shim dll
-#Revised:  9/29/14 brent@mbari.org
+#Revised:  9/30/14 brent@mbari.org
 #WARNING:  omitting frame pointer causes crashes
 CFLAGS = -g -O0 -Wall
 LIBS=libxftd2xx.a -ldl -lrt -lpthread
+
+RELEASE=wineftd2xx1.1.1
 
 WINEDLLPATH := $(shell ./winedllpath $(ARCH))
 ifeq ("$(WINEDLLPATH)", "")
@@ -26,7 +28,7 @@ ARCH = i386
 endif
 endif
 ARCHIVE = $(LIBFTD)/build/$(ARCH)/libftd2xx.a
-$(info Linking to $(ARCHIVE))
+$(info Link with $(ARCHIVE))
 
 
 all: libftd2xx.def ftd2xx.dll.so
@@ -67,5 +69,13 @@ clean:
 	rm -f *.o *xftd2xx.* *.so *.def
 
 distclean:  clean
-	rm -rf $(LIBFTD)
-	rm -f $(TARBALL)
+	rm -rf $(LIBFTD) $(RELEASE)
+	rm -f $(TARBALL) $(RELEASE).tar.gz
+
+release:
+	rm -rf $(RELEASE)
+	mkdir $(RELEASE)
+	cp -a etc *.c *.h *.spec *.objcopy Makefile winedllpath README* \
+	  $(RELEASE)
+	tar zvcf $(RELEASE).tar.gz $(RELEASE)
+
