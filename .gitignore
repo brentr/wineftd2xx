@@ -1,0 +1,6 @@
+*.o
+libftd2xx*
+*xftd2xx*
+.keepme
+*.so
+*.def
