@@ -1,5 +1,6 @@
-This is a Linux WINE dll.so that substitutes for the FTDI's D2XX drivers.
-It is effectively a shim layer between the FTDI's Linux D2XX drivers and WINE.
+This is a Linux Wine dll.so that substitutes for FTDI's D2XX drivers.
+It is effectively a shim layer between the FTDI's Linux D2XX drivers and 
+Microsoft Windows applicatons running under Wine.
 
 Almost all calls are emulated, except those that have no meaning under Unix.
 To date, however, it has been tested only with the Intronix LogicPort running 
