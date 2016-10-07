@@ -32,6 +32,9 @@ endif
 ARCHIVE = $(LIBFTD)/build/$(ARCH)/libftd2xx.a
 $(info Link with $(ARCHIVE))
 
+ifeq (i386,$(ARCH))
+CFLAGS += -m32
+endif
 
 all: libftd2xx.def ftd2xx.dll.so
 
@@ -55,7 +58,7 @@ ftd2xx.o: ftd2xx.c xftd2xx.h WinTypes.h
           -I$(IDIR) -fno-omit-frame-pointer -o $@ ftd2xx.c
 
 ftd2xx.dll.so: ftd2xx.o ftd2xx.spec libxftd2xx.a
-	winegcc -mwindows -lntdll -lkernel32 \
+	winegcc $(CFLAGS) -mwindows -lntdll -lkernel32 \
           -o ftd2xx.dll ftd2xx.o libxftd2xx.a -shared ftd2xx.spec $(LIBS)
 
 libftd2xx.def: ftd2xx.spec ftd2xx.dll.so
