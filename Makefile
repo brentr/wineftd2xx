@@ -22,7 +22,7 @@ sixty4 := $(findstring 64-bit, $(shell file $(WINEDLLPATH)/version.dll.so))
 
 ifeq (,$(ARCH))
 ifneq (,$(sixty4))
-ARCH = x64
+ARCH = x86_64
 else
 ARCH = i386
 endif
