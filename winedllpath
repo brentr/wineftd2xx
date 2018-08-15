@@ -5,13 +5,12 @@
 #  ==> check return code before using output result
 #  ==> produces no output on stdout if it fails
 #  Optional cmd argument is the machine type, typically i386 or x64
-#
 set -e
 
 topdir=$(dirname $(dirname `which wine`))
 arch=${1-'*'}
 
-WINEDLLPATH=$topdir/lib/$arch-linux-gnu/wine
+WINEDLLPATH=$topdir/lib/wine
 [ -d "$WINEDLLPATH" ] || {  #in case of multi-arch
   WINEDLLPATH=`echo /usr/lib/$arch-linux-gnu/wine/wine`
   [ -d "$WINEDLLPATH" ] || exit 2
