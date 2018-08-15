@@ -5,6 +5,7 @@
 #  ==> check return code before using output result
 #  ==> produces no output on stdout if it fails
 #  Optional cmd argument is the machine type, typically i386 or x64
+#
 set -e
 
 topdir=$(dirname $(dirname `which wine`))
