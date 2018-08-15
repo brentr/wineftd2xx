@@ -11,7 +11,7 @@ set -e
 topdir=$(dirname $(dirname `which wine`))
 arch=${1-'*'}
 
-WINEDLLPATH=$topdir/lib/wine
+WINEDLLPATH=$topdir/lib/$arch-linux-gnu/wine
 [ -d "$WINEDLLPATH" ] || {  #in case of multi-arch
   WINEDLLPATH=`echo /usr/lib/$arch-linux-gnu/wine/wine`
   [ -d "$WINEDLLPATH" ] || exit 2
