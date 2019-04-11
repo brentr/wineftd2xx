@@ -1,5 +1,4 @@
 #Makefile for wineftd2xx<->ftd2xx shim dll
-#Revised:  9/30/14 brent@mbari.org
 #WARNING:  omitting frame pointer causes crashes
 CFLAGS = -g -O0 -Wall
 LIBS=libxftd2xx.a -ldl -lrt -lpthread
@@ -51,7 +50,7 @@ libxftd2xx.a:  $(ARCHIVE) xFTsyms.objcopy
 	objcopy --redefine-syms=xFTsyms.objcopy $(ARCHIVE) libxftd2xx.a
 
 xftd2xx.h:  $(IDIR)/ftd2xx.h Makefile
-	sed "s/WINAPI FT_/WINAPI xFT_/g" $(IDIR)/ftd2xx.h >$@
+	sed "s/WINAPI FT_/xFT_/g" $(IDIR)/ftd2xx.h >$@
 
 ftd2xx.o: ftd2xx.c xftd2xx.h WinTypes.h
 	winegcc -D_REENTRANT -D__WINESRC__ -c $(CFLAGS) \
