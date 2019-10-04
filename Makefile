@@ -5,9 +5,13 @@ LIBS=libxftd2xx.a -ldl -lrt -lpthread
 
 RELEASE=wineftd2xx1.1.1
 
-ARCH ?= $(shell uname -m)
+#ARCH ?= $(shell uname -m)
+ARCH=i386
 
-WINEDLLPATH := $(shell ./winedllpath $(ARCH))
+#WINEDLLPATH := $(shell ./winedllpath $(ARCH))
+
+WINEDLLPATH := "/usr/lib32/wine/"
+
 ifeq ("$(WINEDLLPATH)", "")
 $(error Can't guess WINEDLLPATH -- \
   specify it with make WINEDLLPATH={path_to_dll.so directory})
