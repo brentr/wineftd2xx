@@ -540,3 +540,14 @@ Trace("\n");
   return xFT_SetChars(ftHandle, uEventCh, uEventChEn, uErrorCh, uErrorChEn);
 }
 
+FT_STATUS FT_GetDriverVersion (FT_HANDLE ftHandle, LPDWORD lpdwDriverVersion)
+{
+Trace("\n");
+  return xFT_GetDriverVersion(ftHandle, lpdwDriverVersion);
+}
+
+FT_STATUS WINAPI FT_GetLibraryVersion (LPDWORD lpdwDLLVersion)
+{
+Trace("\n");
+  return xFT_GetLibraryVersion (lpdwDLLVersion);
+}

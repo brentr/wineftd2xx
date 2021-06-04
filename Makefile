@@ -32,8 +32,14 @@ ARCHIVE = $(LIBFTD)/build/$(ARCH)/libftd2xx.a
 $(info Link with $(ARCHIVE))
 
 ifeq (i386,$(ARCH))
-CFLAGS += -m32
+MACHINE = -m32
 endif
+
+ifeq (x86_64,$(ARCH))
+MACHINE = -m64
+endif
+
+CFLAGS += $(MACHINE)
 
 all: libftd2xx.def ftd2xx.dll.so
 
@@ -61,7 +67,7 @@ ftd2xx.dll.so: ftd2xx.o ftd2xx.spec libxftd2xx.a
           -o ftd2xx.dll ftd2xx.o libxftd2xx.a -shared ftd2xx.spec $(LIBS)
 
 libftd2xx.def: ftd2xx.spec ftd2xx.dll.so
-	winebuild -w --def -o $@ --export ftd2xx.spec
+	winebuild $(MACHINE) -w --def -o $@ --export ftd2xx.spec
 
 install:        ftd2xx.dll.so libftd2xx.def
 	cp ftd2xx.dll.so libftd2xx.def  $(WINEDLLPATH)

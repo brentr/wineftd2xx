@@ -71,8 +71,8 @@
 71 stdcall FT_GetDeviceInfoList(ptr ptr)
 72 stdcall FT_GetDeviceInfoDetail(long ptr ptr ptr ptr ptr ptr ptr)
 73 stub FT_SetDeadmanTimeout
-74 stub FT_GetDriverVersion
-75 stub FT_GetLibraryVersion
+74 stdcall FT_GetDriverVersion(long ptr)
+75 stdcall FT_GetLibraryVersion(ptr)
 76 stub FT_W32_GetCommMask
 77 stub FT_Rescan
 78 stub FT_Reload
