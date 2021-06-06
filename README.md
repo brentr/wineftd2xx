@@ -1,3 +1,18 @@
+changed Makefile to work for i386 also on amd64
+
+adjust udev to group users cause i didn't have the group plugdev
+
+cat /etc/udev/rules.d/81-logicport.rules
+#Intronix Logicport logic analyzer
+SUBSYSTEM=="usb", ATTR{idVendor}=="0403", ATTRS{idProduct}=="dc48", MODE="0664", GROUP="users"
+
+reloaded rules with:
+sudo udevadm control --reload-rules
+
+after that it finally worked (:
+
+
+
 This is a Linux Wine dll.so that substitutes for FTDI's D2XX drivers.
 It is effectively a shim layer between the FTDI's Linux D2XX drivers and 
 Microsoft Windows applicatons running under Wine.
