@@ -3,7 +3,9 @@
 CFLAGS = -g -O0 -Wall
 LIBS=libxftd2xx.a -ldl -lrt -lpthread
 
-RELEASE=wineftd2xx1.1.1
+VER=1.4.22
+
+RELEASE=wineftd2xx${VER}
 
 ARCH ?= $(shell uname -m)
 
@@ -14,10 +16,11 @@ $(error Can't guess WINEDLLPATH -- \
 endif
 $(info WINEDLLPATH=$(WINEDLLPATH))
 
-#path to FTDI's linux libftd2xx1.1.12 top-level directory
-LIBFTD = libftd2xx1.1.12
+#path to FTDI's linux libftd2xx1.4.22 top-level directory
+LIBFTD = libftd2xx${VER}
 IDIR = $(LIBFTD)
-TARBALL = $(LIBFTD).tar.gz
+
+CUR_DATETIME = `date +"%Y%m%d%H%M"`
 
 sixty4 := $(findstring 64-bit, $(shell file $(WINEDLLPATH)/version.dll.so))
 
@@ -28,7 +31,10 @@ else
 ARCH = i386
 endif
 endif
-ARCHIVE = $(LIBFTD)/build/$(ARCH)/libftd2xx.a
+
+TARBALL = libftd2xx-${ARCH}-${VER}.tgz
+
+ARCHIVE = $(LIBFTD)/build/libftd2xx.a
 $(info Link with $(ARCHIVE))
 
 ifeq (i386,$(ARCH))
@@ -44,8 +50,8 @@ CFLAGS += $(MACHINE)
 all: libftd2xx.def ftd2xx.dll.so
 
 $(TARBALL):
-	wget http://www.ftdichip.com/Drivers/D2XX/Linux/$(TARBALL)
-	touch -t 1201010000 $(TARBALL)
+	wget https://www.ftdichip.com/Drivers/D2XX/Linux/${TARBALL}
+	touch -t ${CUR_DATETIME} ${TARBALL}
 
 $(ARCHIVE) $(IDIR)/ftd2xx.h:  $(TARBALL)
 	tar xzf $(TARBALL)
@@ -57,6 +63,7 @@ libxftd2xx.a:  $(ARCHIVE) xFTsyms.objcopy
 
 xftd2xx.h:  $(IDIR)/ftd2xx.h Makefile
 	sed "s/WINAPI FT_/xFT_/g" $(IDIR)/ftd2xx.h >$@
+	sed -i "/^#include <windows\.h>.*/a typedef const char \*LPCTSTR;" $@
 
 ftd2xx.o: ftd2xx.c xftd2xx.h WinTypes.h
 	winegcc -D_REENTRANT -D__WINESRC__ -c $(CFLAGS) \
