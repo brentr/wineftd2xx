@@ -9,7 +9,7 @@ Note that wine version >= 1.7.27 is recommended.
 To install, after cloning this repository locally:
 
 1)  confirm that you have a functioning wine version >= 1.7.27
-    You must it such that the desired wine executable and tools are 
+    You must configure it such that the desired wine executable and tools are 
     in your $PATH.
 
 2)  at the top level directory of the repository, type:
