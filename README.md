@@ -3,8 +3,6 @@ It is effectively a shim layer between the FTDI's Linux D2XX drivers and
 Microsoft Windows applicatons running under Wine.
 
 Almost all calls are emulated, except those that have no meaning under Unix.
-To date, however, it has been tested only with the Intronix LogicPort running 
-under 32-bit Intel Linux.  64-bit Intel *should* also work.
 
 Note that wine version >= 1.7.27 is recommended.
 
