@@ -23,11 +23,15 @@ IDIR = $(LIBFTD)
 sixty4 := $(findstring 64-bit, $(shell file $(WINEDLLPATH)/version.dll.so))
 
 ifeq (,$(ARCH))
-ifneq (,$(sixty4))
-ARCH = x86_64
+  ifneq (,$(sixty4))
+  ARCH = x86_64
+  else
+  ARCH = i386
+  endif
 else
-ARCH = i386
-endif
+  ifeq (i686,$(ARCH))
+  ARCH = i386
+  endif
 endif
 
 TARBALL = libftd2xx-${ARCH}-${VER}.tgz
@@ -49,7 +53,7 @@ all: libftd2xx.def ftd2xx.dll.so
 
 $(TARBALL):
 	wget https://www.ftdichip.com/Drivers/D2XX/Linux/${TARBALL}
-	touch -t 1201010000 $(TARBALL)  #we want this file to look old!
+	touch -t ${CUR_DATETIME} ${TARBALL}
 
 $(ARCHIVE) $(IDIR)/ftd2xx.h:  $(TARBALL)
 	tar xzf $(TARBALL)
