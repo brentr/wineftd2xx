@@ -1,0 +1,20 @@
+#!/bin/sh
+#  try to find directory containing .dll.so files for the currently installed
+#  wine executable.  We assume this is the first wine on the $PATH
+#  --> this does not always work
+#  ==> check return code before using output result
+#  ==> produces no output on stdout if it fails
+#  Optional cmd argument is the machine type, typically i386 or x86_64
+set -e
+
+bin=`which wine`
+bin=`readlink -f "$bin"`
+topdir=$(dirname $(dirname "$bin"))
+arch=${1-`arch`}
+
+WINELIBDIR=`find $topdir -type d -a -name $arch-unix`
+[ -d "$WINELIBDIR" ] || {  #in case of old multi-arch
+  WINEDLLPATH=/usr/lib/$arch-linux-gnu/wine
+  [ -d "$WINELIBDIR" ] || exit 2
+}
+echo $WINELIBDIR
