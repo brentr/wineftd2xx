@@ -41,7 +41,7 @@ Trace("reason=%d\n", fdwReason);
         }
         if (FT_SetVIDPID(vendor, product))
           return FALSE;
-        TRACE("Seeking vendor:product 0x%04x:0x%04lx\n", vendor, product);
+        Trace("Seeking vendor:product 0x%04x:0x%04lx\n", vendor, product);
       }
     }
   }
