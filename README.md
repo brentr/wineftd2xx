@@ -4,11 +4,11 @@ Microsoft Windows applicatons running under Wine.
 
 Almost all calls are emulated, except those that have no meaning under Unix.
 
-Note that wine version >= 1.7.27 is recommended.
+Note that wine version >= 7.0 is recommended.
 
 To install, after cloning this repository locally:
 
-1)  confirm that you have a functioning wine version >= 1.7.27
+1)  confirm that you have a functioning wine version >= 7.0
     You must configure it such that the desired wine executable and tools are 
     in your $PATH.
 
@@ -58,3 +58,11 @@ command shortcut buttons do not render until one hovers the cursor over them.
 Thus, at most one is visible at any time.
 This is not really much of an issue, as the buttons do work when clicked and
 all their functions are also available on dropdown menus.
+    
+**IMPORTANT**:  If running on a X68_64 system, only the 64-bit version of the library will be generated.
+    The 64-bit library will not be recognized by 32-bit Windows applications!
+    To generate the 32-bit library for use with 32-bit Windows apps:
+    
+    make clean   #remove the 64-bit objects
+    make ARCH=i386   #build the 32-bit library
+    sudo make ARCH=i386 install   #install the 32-bit library
