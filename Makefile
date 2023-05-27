@@ -42,7 +42,7 @@ all: ftd2xx.dll.so libftd2xx.def
 
 $(TARBALL):
 	wget https://www.ftdichip.com/Drivers/D2XX/Linux/${TARBALL}
-	touch -t ${CUR_DATETIME} ${TARBALL}
+	touch -t 1201010000 $(TARBALL)  #we want this file to look old!
 
 $(ARCHIVE) $(IDIR)/ftd2xx.h:  $(TARBALL)
 	tar xzf $(TARBALL)
