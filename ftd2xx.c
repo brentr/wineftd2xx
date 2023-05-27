@@ -1,11 +1,13 @@
 /*
   Quick hack to wrap FTD2xx lib for linux
   such that it may be called from the Wine Windows Emulator
-  
-  revised:  brent@mbari.org  -- 9/29/14
+
+  revised:  brent@mbari.org  -- 5/25/23
 */
 
 #include <stdlib.h>
+
+#undef _WIN32
 
 #include "xftd2xx.h"
 #include "wine/debug.h"
@@ -39,7 +41,7 @@ Trace("reason=%d\n", fdwReason);
         }
         if (FT_SetVIDPID(vendor, product))
           return FALSE;
-        TRACE("Seeking vendor:product 0x%04x:0x%04x\n", vendor, product);
+        Trace("Seeking vendor:product 0x%04x:0x%04lx\n", vendor, product);
       }
     }
   }
@@ -104,14 +106,14 @@ FT_STATUS WINAPI FT_SetBaudRate(FT_HANDLE ftHandle, DWORD dwBaudRate)
 {
 Trace("\n");
   return xFT_SetBaudRate(ftHandle, dwBaudRate);
-}	
+}
 
 
 FT_STATUS WINAPI FT_SetDivisor(FT_HANDLE ftHandle, USHORT usDivisor)
 {
 Trace("\n");
   return xFT_SetDivisor(ftHandle, usDivisor);
-}	
+}
 
 
 FT_STATUS WINAPI FT_SetDataCharacteristics(FT_HANDLE ftHandle,
@@ -119,7 +121,7 @@ FT_STATUS WINAPI FT_SetDataCharacteristics(FT_HANDLE ftHandle,
 {
 Trace("\n");
   return xFT_SetDataCharacteristics(ftHandle, uWordLength, uStopBits, uParity);
-}	
+}
 
 
 FT_STATUS WINAPI FT_SetFlowControl(FT_HANDLE ftHandle, USHORT usFlowControl,
@@ -127,7 +129,7 @@ FT_STATUS WINAPI FT_SetFlowControl(FT_HANDLE ftHandle, USHORT usFlowControl,
 {
 Trace("\n");
   return xFT_SetFlowControl(ftHandle, usFlowControl, uXon, uXoff);
-}	
+}
 
 
 FT_STATUS WINAPI FT_SetDtr(FT_HANDLE ftHandle)
@@ -243,7 +245,7 @@ Trace("\n");
   return xFT_W32_SetupComm(ftHandle, dwReadBufferSize, dwWriteBufferSize);
 }
 
- 
+
 BOOL WINAPI FT_W32_WaitCommEvent(FT_HANDLE ftHandle, LPDWORD lpdwEvent,
                                   LPOVERLAPPED lpOverlapped)
 {
@@ -251,14 +253,14 @@ Trace("\n");
   return xFT_W32_WaitCommEvent(ftHandle, lpdwEvent, lpOverlapped);
 }
 
- 
+
 BOOL WINAPI FT_W32_SetCommMask(FT_HANDLE ftHandle, DWORD dwMask)
 {
 Trace("\n");
   return xFT_W32_SetCommMask(ftHandle, dwMask);
 }
 
- 
+
 BOOL WINAPI FT_W32_SetCommBreak(FT_HANDLE ftHandle)
 {
 Trace("\n");
@@ -306,35 +308,35 @@ Trace("\n");
   return xFT_W32_GetCommState(ftHandle, lpftDcb);
 }
 
- 
+
 BOOL WINAPI FT_W32_SetCommTimeouts(FT_HANDLE ftHandle, LPFTTIMEOUTS lpftTimeouts)
 {
 Trace("\n");
   return xFT_W32_SetCommTimeouts(ftHandle, lpftTimeouts);
 }
 
- 
+
 BOOL WINAPI FT_W32_GetCommTimeouts(FT_HANDLE ftHandle, LPFTTIMEOUTS lpftTimeouts)
 {
 Trace("\n");
   return xFT_W32_GetCommTimeouts(ftHandle, lpftTimeouts);
 }
 
- 
+
 BOOL WINAPI FT_W32_GetOverlappedResult(FT_HANDLE ftHandle,
   LPOVERLAPPED lpOverlapped, LPDWORD lpdwBytesTransferred, BOOL bWait)
 {
 Trace("\n");
-  return xFT_W32_GetOverlappedResult(ftHandle, 
+  return xFT_W32_GetOverlappedResult(ftHandle,
               lpOverlapped, lpdwBytesTransferred, bWait);
 }
 
- 
+
 BOOL WINAPI FT_W32_WriteFile(FT_HANDLE ftHandle, LPVOID lpBuffer,
    DWORD dwBytesToWrite, LPDWORD lpdwBytesWritten, LPOVERLAPPED lpOverlapped)
 {
 Trace("\n");
-  return xFT_W32_WriteFile(ftHandle, 
+  return xFT_W32_WriteFile(ftHandle,
                   lpBuffer, dwBytesToWrite, lpdwBytesWritten, lpOverlapped);
 }
 
@@ -343,7 +345,7 @@ BOOL WINAPI FT_W32_ReadFile(FT_HANDLE ftHandle, LPVOID lpBuffer,
     DWORD dwBytesToRead, LPDWORD lpdwBytesReturned, LPOVERLAPPED lpOverlapped)
 {
 Trace("\n");
-  return xFT_W32_ReadFile(ftHandle, 
+  return xFT_W32_ReadFile(ftHandle,
                   lpBuffer, dwBytesToRead, lpdwBytesReturned, lpOverlapped);
 }
 
@@ -368,42 +370,42 @@ FT_STATUS WINAPI FT_EE_UARead(FT_HANDLE ftHandle, unsigned char *pucData,
 {
 Trace("\n");
   return xFT_EE_UARead(ftHandle, pucData, dwDataLen, lpdwBytesRead);
-}	
+}
 
 
 FT_STATUS WINAPI FT_EE_Program(FT_HANDLE ftHandle, PFT_PROGRAM_DATA pData)
 {
 Trace("\n");
   return xFT_EE_Program(ftHandle, pData);
-}	
+}
 
 
 FT_STATUS WINAPI FT_EE_Read(FT_HANDLE ftHandle, PFT_PROGRAM_DATA pData)
 {
 Trace("\n");
   return xFT_EE_Read(ftHandle, pData);
-}	
+}
 
 
 FT_STATUS WINAPI FT_EraseEE(FT_HANDLE ftHandle)
 {
 Trace("\n");
   return xFT_EraseEE(ftHandle);
-}	
+}
 
 
 FT_STATUS WINAPI FT_WriteEE(FT_HANDLE ftHandle, DWORD dwWordOffset, WORD wValue)
 {
 Trace("\n");
   return xFT_WriteEE(ftHandle, dwWordOffset, wValue);
-}	
+}
 
 
 FT_STATUS WINAPI FT_ReadEE(FT_HANDLE ftHandle, DWORD dwWordOffset, LPWORD lpwValue)
 {
 Trace("\n");
   return xFT_ReadEE(ftHandle, dwWordOffset, lpwValue);
-}	
+}
 
 
 FT_STATUS WINAPI FT_EE_ProgramEx(FT_HANDLE ftHandle, PFT_PROGRAM_DATA pData,
@@ -414,7 +416,7 @@ Trace("\n");
   return xFT_EE_ProgramEx(ftHandle, pData,
                     Manufacturer, ManufacturerId,
                     Description, SerialNumber);
-}	
+}
 
 
 FT_STATUS WINAPI FT_EE_ReadEx(FT_HANDLE ftHandle, PFT_PROGRAM_DATA pData,
@@ -425,14 +427,14 @@ Trace("\n");
   return xFT_EE_ReadEx(ftHandle, pData,
                     Manufacturer, ManufacturerId,
                     Description, SerialNumber);
-}	
+}
 
 
-FT_STATUS WINAPI FT_GetDeviceInfo(FT_HANDLE ftHandle, FT_DEVICE *lpftDevice, 
+FT_STATUS WINAPI FT_GetDeviceInfo(FT_HANDLE ftHandle, FT_DEVICE *lpftDevice,
       LPDWORD lpdwID, PCHAR SerialNumber, PCHAR Description,	LPVOID Dummy)
 {
 Trace("\n");
-  return xFT_GetDeviceInfo(ftHandle, lpftDevice, 
+  return xFT_GetDeviceInfo(ftHandle, lpftDevice,
                             lpdwID, SerialNumber, Description, Dummy);
 }
 

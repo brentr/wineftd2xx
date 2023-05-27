@@ -1,6 +1,6 @@
 #Makefile for wineftd2xx<->ftd2xx shim dll
 #WARNING:  omitting frame pointer causes crashes
-CFLAGS = -g -O0 -Wall
+CFLAGS = -Os -Wall
 LIBS=libxftd2xx.a -ldl -lrt -lpthread
 
 VER=1.4.22
@@ -8,34 +8,25 @@ VER=1.4.22
 RELEASE=wineftd2xx${VER}
 
 ARCH ?= $(shell uname -m)
-
-WINEDLLPATH := $(shell ./winedllpath $(ARCH))
-ifeq ("$(WINEDLLPATH)", "")
-$(error Can't guess WINEDLLPATH -- \
-  specify it with make WINEDLLPATH={path_to_dll.so directory})
+ifeq (i686,$(ARCH))
+  ARCH = i386
 endif
-$(info WINEDLLPATH=$(WINEDLLPATH))
+
+WINELIBDIR := $(shell ./winelibdir $(ARCH))
+ifeq ("$(WINELIBDIR)", "")
+$(error Can't guess WINELIBDIR -- \
+  specify it with make WINELIBDIR={path_to_dll.so directory})
+endif
+$(info WINELIBDIR=$(WINELIBDIR))
 
 #path to FTDI's linux libftd2xx1.4.22 top-level directory
 LIBFTD = libftd2xx${VER}
 IDIR = $(LIBFTD)
 
-CUR_DATETIME = `date +"%Y%m%d%H%M"`
-
-sixty4 := $(findstring 64-bit, $(shell file $(WINEDLLPATH)/version.dll.so))
-
-ifeq (,$(ARCH))
-ifneq (,$(sixty4))
-ARCH = x86_64
-else
-ARCH = i386
-endif
-endif
-
 TARBALL = libftd2xx-${ARCH}-${VER}.tgz
 
 ARCHIVE = $(LIBFTD)/build/libftd2xx.a
-$(info Link with $(ARCHIVE))
+$(info Linked with $(ARCHIVE))
 
 ifeq (i386,$(ARCH))
 MACHINE = -m32
@@ -47,7 +38,7 @@ endif
 
 CFLAGS += $(MACHINE)
 
-all: libftd2xx.def ftd2xx.dll.so
+all: ftd2xx.dll.so libftd2xx.def
 
 $(TARBALL):
 	wget https://www.ftdichip.com/Drivers/D2XX/Linux/${TARBALL}
@@ -72,18 +63,19 @@ ftd2xx.o: ftd2xx.c xftd2xx.h WinTypes.h
 ftd2xx.dll.so: ftd2xx.o ftd2xx.spec libxftd2xx.a
 	winegcc $(CFLAGS) -mwindows -lntdll -lkernel32 \
           -o ftd2xx.dll ftd2xx.o libxftd2xx.a -shared ftd2xx.spec $(LIBS)
+	chmod -x $@
 
 libftd2xx.def: ftd2xx.spec ftd2xx.dll.so
 	winebuild $(MACHINE) -w --def -o $@ --export ftd2xx.spec
 
-install:        ftd2xx.dll.so libftd2xx.def
-	cp ftd2xx.dll.so libftd2xx.def  $(WINEDLLPATH)
+install:  ftd2xx.dll.so
+	cp ftd2xx.dll.so $(WINELIBDIR)
 
 uninstall:
-	rm -f $(WINEDLLPATH)/ftd2xx.dll.so $(WINEDLLPATH)/libftd2xx.def
+	rm -f $(WINELIBDIR)/ftd2xx.dll.so $(WINELIBDIR)/libftd2xx.def
 
 clean:
-	rm -f *.o *xftd2xx.* *.so *.def
+	rm -f *.o *xftd2xx.* *.so *.def $(ARCHIVE)
 
 distclean:  clean
 	rm -rf $(LIBFTD) $(RELEASE)
