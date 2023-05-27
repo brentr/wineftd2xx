@@ -84,7 +84,7 @@ distclean:  clean
 release:
 	rm -rf $(RELEASE)
 	mkdir $(RELEASE)
-	cp -a etc *.c *.h *.spec *.objcopy Makefile winedllpath README* \
+	cp -a etc *.c *.h *.spec *.objcopy Makefile winelibdir README* \
 	  $(RELEASE)
 	tar zvcf $(RELEASE).tar.gz $(RELEASE)
 
