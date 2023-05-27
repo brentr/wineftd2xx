@@ -75,7 +75,7 @@ uninstall:
 	rm -f $(WINELIBDIR)/ftd2xx.dll.so $(WINELIBDIR)/libftd2xx.def
 
 clean:
-	rm -f *.o *xftd2xx.* *.so *.def
+	rm -f *.o *xftd2xx.* *.so *.def $(ARCHIVE)
 
 distclean:  clean
 	rm -rf $(LIBFTD) $(RELEASE)
