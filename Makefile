@@ -87,4 +87,3 @@ release:
 	cp -a etc *.c *.h *.spec *.objcopy Makefile winelibdir README* \
 	  $(RELEASE)
 	tar zvcf $(RELEASE).tar.gz $(RELEASE)
-

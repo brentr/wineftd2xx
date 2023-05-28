@@ -1,20 +1,23 @@
 #!/bin/sh
 #  try to find directory containing .dll.so files for the currently installed
-#  wine executable.  We assume this is the first wine on the $PATH
+#  wine executable.  We guess this from the first wine on the $PATH
 #  --> this does not always work
 #  ==> check return code before using output result
 #  ==> produces no output on stdout if it fails
 #  Optional cmd argument is the machine type, typically i386 or x86_64
 set -e
 
+arch=${1-`arch`}
+[ "$arch" = i686 ] && arch=i386
+
 bin=`which wine`
 bin=`readlink -f "$bin"`
-topdir=$(dirname $(dirname "$bin"))
-arch=${1-`arch`}
-
-WINELIBDIR=`find $topdir -type d -a -name $arch-unix`
-[ -d "$WINELIBDIR" ] || {  #in case of old multi-arch
-  WINEDLLPATH=/usr/lib/$arch-linux-gnu/wine
-  [ -d "$WINELIBDIR" ] || exit 2
-}
+bindir=`dirname "$bin"`
+if [ "$bindir" = /usr/bin -o "$bindir" = /bin ]; then  #assume distro package
+  WINELIBDIR=/usr/lib/$arch-linux-gnu/wine
+else  #assume WineHQ packaging
+  topdir=`dirname "$bindir"`
+  WINELIBDIR=`find $topdir -type d -a -name $arch-unix`
+fi
+[ -d "$WINELIBDIR" ] || return 2
 echo $WINELIBDIR
