@@ -1,8 +1,10 @@
-This is a Linux Wine dll.so that substitutes for FTDI's D2XX drivers.
+This is a Linux Wine dll.so that substitutes for FTDI's D2XX version 1 drivers.
 It is effectively a shim layer between the FTDI's Linux D2XX drivers and 
 Microsoft Windows applicatons running under Wine.
-
 Almost all calls are emulated, except those that have no meaning under Unix.
+
+FTDI's D2xx version 2 drivers are not supported.
+Unfortunately, most recent software requires FTDI's version 2 libraries.
 
 Note that wine version >= 7.0 is recommended.
 
