@@ -70,4 +70,4 @@ all their functions are also available on dropdown menus.
     make ARCH=i386   #build the 32-bit library
     sudo make ARCH=i386 install   #install the 32-bit library
 
-Note:  This may require installing the gcc-multilib package
+Note:  Compiling this may require installing the gcc-multilib package
