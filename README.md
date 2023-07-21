@@ -7,6 +7,7 @@ FTDI's D2xx version 2 drivers are not supported.
 Unfortunately, most recent software requires FTDI's version 2 libraries.
 
 Note that wine version >= 7.0 is recommended.
+The wine*-dev package is required to compile this shim library
 
 To install, after cloning this repository locally:
 
@@ -68,3 +69,5 @@ all their functions are also available on dropdown menus.
     make clean   #remove the 64-bit objects
     make ARCH=i386   #build the 32-bit library
     sudo make ARCH=i386 install   #install the 32-bit library
+
+Note:  This may require installing the gcc-multilib package
