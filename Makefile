@@ -3,13 +3,21 @@
 CFLAGS = -Os -Wall
 LIBS=libxftd2xx.a -ldl -lrt -lpthread
 
-VER=1.4.22
+VER=1.4.34
 
-RELEASE=wineftd2xx${VER}
+RELEASE=wineftd2xx$(VER)
 
 ARCH ?= $(shell uname -m)
 ifeq (i686,$(ARCH))
   ARCH = i386
+endif
+
+ifeq (i386,$(ARCH))
+BITS = 32
+endif
+
+ifeq (x86_64,$(ARCH))
+BITS = 64
 endif
 
 WINELIBDIR := $(shell ./winelibdir $(ARCH))
@@ -19,35 +27,27 @@ $(error Can't guess WINELIBDIR -- \
 endif
 $(info WINELIBDIR=$(WINELIBDIR))
 
-#path to FTDI's linux libftd2xx1.4.22 top-level directory
-LIBFTD = libftd2xx${VER}
+#path to FTDI's linux libftd2xx1.4.34 top-level directory
+LIBFTD = libftd2xx$(VER)
 IDIR = $(LIBFTD)
 
-TARBALL = libftd2xx-${ARCH}-${VER}.tgz
+TARBALL = libftd2xx-linux-x86_$(BITS)-$(VER).tgz
 
-ARCHIVE = $(LIBFTD)/build/libftd2xx.a
+ARCHIVE = $(LIBFTD)/libftd2xx.a
 $(info Linked with $(ARCHIVE))
 
-ifeq (i386,$(ARCH))
-MACHINE = -m32
-endif
-
-ifeq (x86_64,$(ARCH))
-MACHINE = -m64
-endif
-
-CFLAGS += $(MACHINE)
+MACHINE = -m$(BITS)
 
 all: ftd2xx.dll.so libftd2xx.def
 
 $(TARBALL):
-	wget https://www.ftdichip.com/Driver/D2XX/Linux/${TARBALL}
+	wget https://ftdichip.com/wp-content/uploads/2025/11/$(TARBALL)
 	touch -t 1201010000 $(TARBALL)  #we want this file to look old!
 
 $(ARCHIVE) $(IDIR)/ftd2xx.h:  $(TARBALL)
 	tar xzf $(TARBALL)
 	rm -rf $(LIBFTD)
-	mv release $(LIBFTD)
+	mv linux-x86_$(BITS) $(LIBFTD)
 
 libxftd2xx.a:  $(ARCHIVE) xFTsyms.objcopy
 	objcopy --redefine-syms=xFTsyms.objcopy $(ARCHIVE) libxftd2xx.a
@@ -57,11 +57,11 @@ xftd2xx.h:  $(IDIR)/ftd2xx.h Makefile
 	sed -i "/^#include <windows\.h>.*/a typedef const char \*LPCTSTR;" $@
 
 ftd2xx.o: ftd2xx.c xftd2xx.h WinTypes.h
-	winegcc -D_REENTRANT -D__WINESRC__ -c $(CFLAGS) \
+	winegcc -D_REENTRANT -D__WINESRC__ -c $(CFLAGS) $(MACHINE) \
           -I$(IDIR) -fno-omit-frame-pointer -o $@ ftd2xx.c
 
 ftd2xx.dll.so: ftd2xx.o ftd2xx.spec libxftd2xx.a
-	winegcc $(CFLAGS) -mwindows -lntdll -lkernel32 \
+	winegcc $(LDFLAGS) $(MACHINE) -mwindows -lntdll -lkernel32 \
           -o ftd2xx.dll ftd2xx.o libxftd2xx.a -shared ftd2xx.spec $(LIBS)
 	chmod -x $@
 
