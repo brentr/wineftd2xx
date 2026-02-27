@@ -3,7 +3,7 @@
 CFLAGS = -Os -Wall
 LIBS=libxftd2xx.a -ldl -lrt -lpthread
 
-VER=1.4.22
+VER=1.4.34
 
 RELEASE=wineftd2xx${VER}
 
@@ -19,35 +19,40 @@ $(error Can't guess WINELIBDIR -- \
 endif
 $(info WINELIBDIR=$(WINELIBDIR))
 
-#path to FTDI's linux libftd2xx1.4.22 top-level directory
+#path to FTDI's linux libftd2xx top-level directory
 LIBFTD = libftd2xx${VER}
 IDIR = $(LIBFTD)
 
-TARBALL = libftd2xx-${ARCH}-${VER}.tgz
+TARBALL = libftd2xx-linux-${ARCH}-${VER}.tgz
 
-ARCHIVE = $(LIBFTD)/build/libftd2xx.a
+ARCHIVE = $(LIBFTD)/libftd2xx.a
 $(info Linked with $(ARCHIVE))
 
+
 ifeq (i386,$(ARCH))
-MACHINE = -m32
+BITS = 32
+else
+  ifeq (x86_64,$(ARCH))
+    BITS = 64
+  else
+    $(error unsupported architecture $(ARCH))
+  endif
 endif
 
-ifeq (x86_64,$(ARCH))
-MACHINE = -m64
-endif
+MACHINE = -m$(BITS)
 
 CFLAGS += $(MACHINE)
 
 all: ftd2xx.dll.so libftd2xx.def
 
 $(TARBALL):
-	wget https://www.ftdichip.com/Driver/D2XX/Linux/${TARBALL}
+	wget https://ftdichip.com/wp-content/uploads/2025/11/${TARBALL}
 	touch -t 1201010000 $(TARBALL)  #we want this file to look old!
 
 $(ARCHIVE) $(IDIR)/ftd2xx.h:  $(TARBALL)
 	tar xzf $(TARBALL)
 	rm -rf $(LIBFTD)
-	mv release $(LIBFTD)
+	mv linux-x86_$(BITS) $(LIBFTD)
 
 libxftd2xx.a:  $(ARCHIVE) xFTsyms.objcopy
 	objcopy --redefine-syms=xFTsyms.objcopy $(ARCHIVE) libxftd2xx.a
